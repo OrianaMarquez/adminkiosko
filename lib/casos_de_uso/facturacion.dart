@@ -18,6 +18,11 @@ class Facturacion {
     // Decrementa el stock de los productos de la factura.
     await repositorioDeProductos.aplicarFactura(factura);
 
-    print('Factura procesada para: ${factura.cliente.nombre}');
+    // Mostrar listado de productos con su respectivo stock.
+    final productos = await repositorioDeProductos.obtenerTodos();
+    print("Listado de productos y su stock:");
+    for (final producto in productos) {
+      print("${producto.nombre}: ${producto.stock}");
+    }
   }
 }

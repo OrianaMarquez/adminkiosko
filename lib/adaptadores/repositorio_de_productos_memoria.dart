@@ -4,7 +4,43 @@ import 'package:admin_kiosko/dominio/factura.dart';
 import 'package:admin_kiosko/puertos/repositorio_de_productos.dart';
 
 class RepositorioDeProductosMemoria implements RepositorioDeProductos {
-  final List<Mercaderia> _productos = [];
+  final List<Mercaderia> _productos = [
+    Mercaderia(
+      id: '1',
+      nombre: 'Chupetin',
+      descripcion: 'Delicioso chupetín',
+      precio: 1.0,
+      stock: 20,
+    ),
+    Mercaderia(
+      id: '2',
+      nombre: 'Caramelo',
+      descripcion: 'Dulce caramelo',
+      precio: 0.5,
+      stock: 20,
+    ),
+    Mercaderia(
+      id: '3',
+      nombre: 'Chicle',
+      descripcion: 'Chicle para masticar',
+      precio: 0.8,
+      stock: 20,
+    ),
+    Mercaderia(
+      id: '4',
+      nombre: 'Jugo',
+      descripcion: 'Jugo refrescante',
+      precio: 2.0,
+      stock: 20,
+    ),
+    Mercaderia(
+      id: '5',
+      nombre: 'Alfajor',
+      descripcion: 'Alfajor tradicional',
+      precio: 1.5,
+      stock: 20,
+    ),
+  ];
 
   @override
   Future<List<Mercaderia>> obtenerTodos() async {
@@ -44,9 +80,7 @@ class RepositorioDeProductosMemoria implements RepositorioDeProductos {
       final index = _productos.indexWhere((p) => p.id == item.mercaderia.id);
       if (index != -1) {
         final producto = _productos[index];
-        // Se descuenta la cantidad vendida del stock actual.
         final nuevoStock = producto.stock - item.cantidad;
-        // Puedes implementar validaciones para que nuevoStock no sea negativo.
         _productos[index] = producto.copyWith(stock: nuevoStock);
       }
     }
