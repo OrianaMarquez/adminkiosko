@@ -4,6 +4,15 @@ import 'package:admin_kiosko/dominio/factura.dart';
 import 'package:admin_kiosko/puertos/repositorio_de_productos.dart';
 
 class RepositorioDeProductosMemoria implements RepositorioDeProductos {
+  static final RepositorioDeProductosMemoria _instancia =
+      RepositorioDeProductosMemoria._internal();
+
+  factory RepositorioDeProductosMemoria() {
+    return _instancia;
+  }
+
+  RepositorioDeProductosMemoria._internal();
+
   final List<Mercaderia> _productos = [
     Mercaderia(
       id: '1',

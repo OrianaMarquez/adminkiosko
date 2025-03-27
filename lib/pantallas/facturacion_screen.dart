@@ -5,11 +5,12 @@ import 'package:admin_kiosko/dominio/cliente.dart';
 import 'package:admin_kiosko/adaptadores/repositorio_de_productos_memoria.dart';
 import 'package:admin_kiosko/adaptadores/repositorio_de_clientes_memoria.dart';
 import 'package:admin_kiosko/casos_de_uso/facturacion.dart';
+import 'package:admin_kiosko/pantallas/menu_screen.dart';
 
 class FacturacionScreen extends StatefulWidget {
   final Factura factura;
 
-  const FacturacionScreen({Key? key, required this.factura}) : super(key: key);
+  const FacturacionScreen({super.key, required this.factura});
 
   @override
   State<FacturacionScreen> createState() => _FacturacionScreenState();
@@ -31,12 +32,10 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
   }
 
   Future<void> _cargarClientes() async {
-    // Se obtiene el listado de clientes desde el repositorio.
     final repoClientes = RepositorioDeClientesMemoria();
     final clientes = await repoClientes.obtenerTodos();
     setState(() {
       clientesDisponibles = clientes;
-      // Por defecto se selecciona el primer cliente si existe.
       if (clientesDisponibles.isNotEmpty) {
         selectedClienteId = clientesDisponibles.first.id;
       }
@@ -67,7 +66,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
 
   Future<void> _mostrarDialogoAgregarItem() async {
     final TextEditingController cantidadController = TextEditingController();
-    // Se obtiene la lista de productos desde el repositorio.
     final repo = RepositorioDeProductosMemoria();
     final List<Mercaderia> productosDisponibles = await repo.obtenerTodos();
     String? selectedProductId;
@@ -75,7 +73,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
     await showDialog(
       context: context,
       builder: (context) {
-        // Usamos StatefulBuilder para poder actualizar el valor seleccionado.
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
@@ -145,7 +142,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
   }
 
   void _confirmarVenta() {
-    // Se crea una instancia de Facturacion y se invoca el método facturar.
     final facturacion = Facturacion(
       repositorioDeClientes: RepositorioDeClientesMemoria(),
       repositorioDeProductos: RepositorioDeProductosMemoria(),
@@ -159,13 +155,33 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
               content: const Text("La venta se ha confirmado exitosamente."),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MenuScreen(),
+                      ),
+                    );
+                  },
                   child: const Text("OK"),
                 ),
               ],
             ),
       );
     });
+  }
+
+  void _cancelarVenta() {
+    setState(() {
+      widget.factura.items.clear();
+      selectedClienteId =
+          clientesDisponibles.isNotEmpty ? clientesDisponibles.first.id : null;
+      fechaSeleccionada = DateTime.now();
+    });
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MenuScreen()),
+    );
   }
 
   @override
@@ -177,7 +193,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Selector de fecha.
             Row(
               children: [
                 const Text(
@@ -194,7 +209,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            // Selector de cliente.
             Row(
               children: [
                 const Text(
@@ -226,7 +240,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            // Listado de items.
             const Text(
               'Items:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -241,14 +254,26 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
                     subtitle: Text(
                       'Cantidad: ${item.cantidad} - Precio unitario: \$${item.mercaderia.precio.toStringAsFixed(2)}',
                     ),
-                    trailing: Text(
-                      '\$${(item.cantidad * item.mercaderia.precio).toStringAsFixed(2)}',
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '\$${(item.cantidad * item.mercaderia.precio).toStringAsFixed(2)}',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              widget.factura.items.removeAt(index);
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   );
                 },
               ),
             ),
-            // Total.
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -266,7 +291,6 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            // Casilla de verificación de factura pagada.
             Row(
               children: [
                 const Text('Pagada:'),
@@ -281,11 +305,21 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            // Botón para confirmar la venta.
-            ElevatedButton.icon(
-              onPressed: _confirmarVenta,
-              icon: const Icon(Icons.check),
-              label: const Text("Confirmar Venta"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _confirmarVenta,
+                  icon: const Icon(Icons.check),
+                  label: const Text("Confirmar Venta"),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _cancelarVenta,
+                  icon: const Icon(Icons.cancel),
+                  label: const Text("Cancelar Venta"),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                ),
+              ],
             ),
           ],
         ),

@@ -19,10 +19,10 @@ class Facturacion {
     await repositorioDeProductos.aplicarFactura(factura);
 
     // Mostrar listado de productos con su respectivo stock.
-    final productos = await repositorioDeProductos.obtenerTodos();
-    print("Listado de productos y su stock:");
-    for (final producto in productos) {
-      print("${producto.nombre}: ${producto.stock}");
-    }
+    // final productos = await repositorioDeProductos.obtenerTodos();
+    // print("Listado de productos y su stock:");
+    // for (final producto in productos) {
+    //   print("${producto.nombre}: ${producto.stock}");
+    // }
   }
 }
