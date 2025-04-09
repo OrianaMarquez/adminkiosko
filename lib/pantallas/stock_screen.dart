@@ -15,19 +15,55 @@ class StockScreen extends StatefulWidget {
 
 class _StockScreenState extends State<StockScreen> with RouteAware {
   late List<Mercaderia> productos;
+  late List<bool> enEdicion;
+  late List<TextEditingController> controladores;
 
   @override
   void initState() {
     super.initState();
     productos = widget.productos;
+    enEdicion = List<bool>.filled(productos.length, false);
+    controladores =
+        productos
+            .map(
+              (producto) =>
+                  TextEditingController(text: producto.stock.toString()),
+            )
+            .toList();
   }
 
-  // Actualiza la lista de productos consultando nuevamente al repositorio.
   Future<void> _actualizarProductos() async {
     final nuevosProductos =
         await RepositorioDeProductosMemoria().obtenerTodos();
     setState(() {
       productos = nuevosProductos;
+      enEdicion = List<bool>.filled(productos.length, false);
+      controladores =
+          productos
+              .map(
+                (producto) =>
+                    TextEditingController(text: producto.stock.toString()),
+              )
+              .toList();
+    });
+  }
+
+  void _editarStock(int index) async {
+    if (enEdicion[index]) {
+      final nuevoStock = int.tryParse(controladores[index].text);
+      if (nuevoStock != null) {
+        final producto = productos[index];
+        final actualizado = producto.copyWith(stock: nuevoStock);
+        await RepositorioDeProductosMemoria().actualizarProducto(actualizado);
+
+        setState(() {
+          productos[index] = actualizado;
+        });
+      }
+    }
+
+    setState(() {
+      enEdicion[index] = !enEdicion[index];
     });
   }
 
@@ -39,13 +75,15 @@ class _StockScreenState extends State<StockScreen> with RouteAware {
 
   @override
   void didPopNext() {
-    // Cuando se regresa a esta pantalla, actualizar los productos.
     _actualizarProductos();
   }
 
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
+    for (final controller in controladores) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -65,9 +103,37 @@ class _StockScreenState extends State<StockScreen> with RouteAware {
                         itemCount: productos.length,
                         itemBuilder: (context, index) {
                           final producto = productos[index];
+
                           return ListTile(
                             title: Text(producto.nombre),
-                            trailing: Text("Stock: ${producto.stock}"),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  child:
+                                      enEdicion[index]
+                                          ? TextField(
+                                            controller: controladores[index],
+                                            keyboardType: TextInputType.number,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              isDense: true,
+                                              contentPadding: EdgeInsets.all(8),
+                                            ),
+                                          )
+                                          : Text("Stock: ${producto.stock}"),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    enEdicion[index] ? Icons.check : Icons.edit,
+                                    color:
+                                        enEdicion[index] ? Colors.green : null,
+                                  ),
+                                  onPressed: () => _editarStock(index),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -79,7 +145,7 @@ class _StockScreenState extends State<StockScreen> with RouteAware {
                   MaterialPageRoute(builder: (context) => const MenuScreen()),
                 );
               },
-              child: const Text("Cancelar"),
+              child: const Text("Menú"),
             ),
           ],
         ),

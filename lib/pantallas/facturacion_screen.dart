@@ -178,6 +178,13 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
           clientesDisponibles.isNotEmpty ? clientesDisponibles.first.id : null;
       fechaSeleccionada = DateTime.now();
     });
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const MenuScreen()),
+    // );
+  }
+
+  void _volverMenu() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MenuScreen()),
@@ -318,6 +325,11 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
                   icon: const Icon(Icons.cancel),
                   label: const Text("Cancelar Venta"),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _volverMenu,
+                  icon: const Icon(Icons.menu_book_rounded),
+                  label: const Text("Menú"),
                 ),
               ],
             ),
