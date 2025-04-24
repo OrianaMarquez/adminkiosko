@@ -1,12 +1,27 @@
 import 'package:admin_kiosko/dominio/factura.dart';
+import 'package:hive/hive.dart';
 
-class Cliente {
-  final String id;
-  final String nombre;
-  final String correo;
-  final String telefono;
-  final DateTime fechaNacimiento;
-  final List<Factura> facturas;
+part 'cliente.g.dart';
+
+@HiveType(typeId: 0)
+class Cliente extends HiveObject {
+  @HiveField(0)
+  String id;
+
+  @HiveField(1)
+  String nombre;
+
+  @HiveField(2)
+  String correo;
+
+  @HiveField(3)
+  String telefono;
+
+  @HiveField(4)
+  DateTime fechaNacimiento;
+
+  @HiveField(5)
+  List<Factura> facturas;
 
   Cliente({
     required this.id,
@@ -14,8 +29,8 @@ class Cliente {
     required this.correo,
     required this.telefono,
     required this.fechaNacimiento,
-    List<Factura>? facturas,
-  }) : facturas = facturas ?? [];
+    this.facturas = const [],
+  });
 
   int get edad {
     final today = DateTime.now();

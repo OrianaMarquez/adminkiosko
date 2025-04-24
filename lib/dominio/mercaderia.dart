@@ -3,7 +3,7 @@ class Mercaderia {
   final String nombre;
   final String descripcion;
   final double precio;
-  final int stock; // Campo agregado
+  final int stock;
 
   Mercaderia({
     required this.id,
@@ -13,7 +13,6 @@ class Mercaderia {
     required this.stock,
   });
 
-  // Método para obtener una copia con stock modificado.
   Mercaderia copyWith({int? stock}) {
     return Mercaderia(
       id: id,
@@ -22,5 +21,25 @@ class Mercaderia {
       precio: precio,
       stock: stock ?? this.stock,
     );
+  }
+
+  factory Mercaderia.fromJson(Map<String, dynamic> json) {
+    return Mercaderia(
+      id: json['id'],
+      nombre: json['nombre'],
+      descripcion: json['descripcion'],
+      precio: (json['precio'] as num).toDouble(),
+      stock: json['stock'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nombre': nombre,
+      'descripcion': descripcion,
+      'precio': precio,
+      'stock': stock,
+    };
   }
 }

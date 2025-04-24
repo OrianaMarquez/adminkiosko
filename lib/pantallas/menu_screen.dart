@@ -3,7 +3,7 @@ import 'package:admin_kiosko/dominio/cliente.dart';
 import 'package:admin_kiosko/dominio/factura.dart';
 import 'package:admin_kiosko/pantallas/facturacion_screen.dart';
 import 'package:admin_kiosko/pantallas/stock_screen.dart';
-import 'package:admin_kiosko/adaptadores/repositorio_de_productos_memoria.dart';
+import 'package:admin_kiosko/adaptadores/memoria/repositorio_de_productos_memoria.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});

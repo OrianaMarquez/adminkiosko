@@ -1,9 +1,11 @@
+import 'package:admin_kiosko/adaptadores/json/repositorio_de_clientes_hive.dart';
+import 'package:admin_kiosko/adaptadores/json/repositorio_de_producto_json.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_kiosko/dominio/factura.dart';
 import 'package:admin_kiosko/dominio/mercaderia.dart';
 import 'package:admin_kiosko/dominio/cliente.dart';
-import 'package:admin_kiosko/adaptadores/repositorio_de_productos_memoria.dart';
-import 'package:admin_kiosko/adaptadores/repositorio_de_clientes_memoria.dart';
+import 'package:admin_kiosko/adaptadores/memoria/repositorio_de_productos_memoria.dart';
+import 'package:admin_kiosko/adaptadores/memoria/repositorio_de_clientes_memoria.dart';
 import 'package:admin_kiosko/casos_de_uso/facturacion.dart';
 import 'package:admin_kiosko/pantallas/menu_screen.dart';
 
@@ -143,7 +145,7 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
 
   void _confirmarVenta() {
     final facturacion = Facturacion(
-      repositorioDeClientes: RepositorioDeClientesMemoria(),
+      repositorioDeClientes: RepositorioDeClientesHive(),
       repositorioDeProductos: RepositorioDeProductosMemoria(),
     );
     facturacion.facturar(widget.factura).then((_) {

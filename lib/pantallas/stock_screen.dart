@@ -1,5 +1,6 @@
+import 'package:admin_kiosko/adaptadores/json/repositorio_de_producto_json.dart';
 import 'package:flutter/material.dart';
-import 'package:admin_kiosko/adaptadores/repositorio_de_productos_memoria.dart';
+import 'package:admin_kiosko/adaptadores/memoria/repositorio_de_productos_memoria.dart';
 import 'package:admin_kiosko/dominio/mercaderia.dart';
 import 'package:admin_kiosko/pantallas/menu_screen.dart';
 import 'package:admin_kiosko/main.dart'; // Para acceder al routeObserver

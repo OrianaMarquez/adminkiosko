@@ -1,0 +1,38 @@
+[
+    {
+      "id": "1",
+      "nombre": "Chupetin",
+      "descripcion": "Delicioso chupetín",
+      "precio": 1.0,
+      "stock": 20
+    },
+    {
+      "id": "2",
+      "nombre": "Caramelo",
+      "descripcion": "Dulce caramelo",
+      "precio": 0.5,
+      "stock": 20
+    },
+    {
+      "id": "3",
+      "nombre": "Chicle",
+      "descripcion": "Chicle para masticar",
+      "precio": 0.8,
+      "stock": 20
+    },
+    {
+      "id": "4",
+      "nombre": "Jugo",
+      "descripcion": "Jugo refrescante",
+      "precio": 2.0,
+      "stock": 20
+    },
+    {
+      "id": "5",
+      "nombre": "Alfajor",
+      "descripcion": "Alfajor tradicional",
+      "precio": 1.5,
+      "stock": 20
+    }
+  ]
+  
